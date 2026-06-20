@@ -54,8 +54,8 @@ namespace TestProject.Controllers {
         }
 
         [HttpGet]
-        [Route("file")]
-        public async Task<IActionResult> GetFile(string path)
+        [Route("download")]
+        public async Task<IActionResult> DownloadFile(string path)
         {
             #region Validation Logic
             // Check for innocuous mistakes
