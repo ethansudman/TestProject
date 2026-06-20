@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 
+/* This controller provides endpoints for browsing directories and uploading/downloading files within a specific "browsable" directory on the server.
+ * 
+ * This implementation is missing several things that we would likely want in a production application, such as authentication/authorization to restrict access to the endpoints, logging of important events (e.g., file uploads/downloads, attempts to access unauthorized paths), and potentially some rate limiting or other measures to prevent abuse of the endpoints.
+ */
+
 namespace TestProject.Controllers {
     [ApiController]
     [Route("[controller]")]
@@ -36,6 +41,8 @@ namespace TestProject.Controllers {
             {
                 return BadRequest("Uploading files to the specified path is not allowed.");
             }
+
+            // In a real production application, we might want to do some additional validation on the file itself, such as checking the file extension against a whitelist of allowed types, scanning the file for viruses/malware, and/or enforcing a maximum file size limit to prevent abuse of the upload functionality
             #endregion
 
             using (var stream = new FileStream(path, FileMode.Create))
