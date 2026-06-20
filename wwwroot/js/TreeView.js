@@ -61,7 +61,7 @@ function renderEntity(entity, parentUl) {
 
         const span = document.createElement('span');
         span.className = 'caret';
-        span.textContent = name;
+        span.textContent = `${name} (${entity.entityCount} entities, total size ${entity.size} bytes)`;
         li.appendChild(span);
 
         const nested = document.createElement('ul');

@@ -37,11 +37,11 @@ public class Entity
     /// <summary>
     /// Get the number of elements contained within this entity, including itself and all nested subentities
     /// </summary>
-    public int ChildCount
+    public int EntityCount
     {
         get
         {
-            return 1 + (Subentities?.Sum(e => e.ChildCount) ?? 0);
+            return 1 + (Subentities?.Sum(e => e.EntityCount) ?? 0);
         }
     }
 
