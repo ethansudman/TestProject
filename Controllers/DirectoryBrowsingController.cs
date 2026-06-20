@@ -100,7 +100,6 @@ namespace TestProject.Controllers {
             return entity;
         }
 
-        }
         private void InitEntity(Entity entity)
         {
             switch (entity.EntityType)
