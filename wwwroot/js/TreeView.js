@@ -76,7 +76,7 @@ function renderEntity(entity, parentUl) {
         const li = document.createElement('li');
         const fileSpan = document.createElement('span');
         fileSpan.className = 'file';
-        fileSpan.textContent = name;
+        fileSpan.textContent = `${name} (${entity.size} bytes)`;
         // store full path for later use if needed
         fileSpan.dataset.path = entity.path || '';
         // We want users to be able to click on files to download them
