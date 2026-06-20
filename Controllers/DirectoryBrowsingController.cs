@@ -12,11 +12,46 @@ namespace TestProject.Controllers {
             _logger = logger;
         }
 
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] string path)
+        {
+            #region Validation
+            // First couple of checks are for innocuous mistakes, last one is a potential security issue if we allow arbitrary file uploads to arbitrary locations on the server
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("Must include a file");
+            }
+            else if (string.IsNullOrWhiteSpace(path))
+            {
+                return BadRequest("Invalid path");
+            }
+            else if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                return BadRequest("The specified directory does not exist.");
+            }
+
+            // Must be a path within the BrowsableDirectory to prevent file uploads to arbitrary locations
+            // In a real application, we might want to take further action beyond just returning a BadRequest, such as logging an alert or even temporarily blocking the client IP if we see repeated attempts to upload to unauthorized paths
+            else if (!path.StartsWith(Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.BrowsableDirectoryName)))
+            {
+                return BadRequest("Uploading files to the specified path is not allowed.");
+            }
+            #endregion
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return Ok();
+        }
+
         [HttpGet]
         [Route("file")]
-        public async Task<ActionResult> GetFile(string path)
+        public async Task<IActionResult> GetFile(string path)
         {
             #region Validation Logic
+            // Check for innocuous mistakes
             if (string.IsNullOrWhiteSpace(path))
             {
                 return BadRequest("Path parameter is required.");
@@ -27,6 +62,8 @@ namespace TestProject.Controllers {
                 return NotFound("File not found.");
             }
 
+            // Must be a path within the BrowsableDirectory to prevent access to arbitrary files
+            // In a real application, we might want to take further action beyond just returning a BadRequest, such as logging an alert or even temporarily blocking the client IP if we see repeated attempts to access unauthorized paths
             else if (!path.StartsWith(Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.BrowsableDirectoryName)))
             {
                 return BadRequest("Access to the specified path is not allowed.");
@@ -56,6 +93,7 @@ namespace TestProject.Controllers {
             return entity;
         }
 
+        }
         private void InitEntity(Entity entity)
         {
             switch (entity.EntityType)
