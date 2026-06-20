@@ -12,6 +12,7 @@ namespace TestProject {
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
+                    // I want the enum values to be serialized as strings rather than integers, so I'm adding the JsonStringEnumConverter to the JsonSerializerOptions.Converters collection. This will ensure that when the EntityType enum is serialized to JSON, it will be represented as a string (e.g., "Folder" or "File") rather than an integer (e.g., 0 or 1).
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
