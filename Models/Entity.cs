@@ -20,17 +20,17 @@ public enum EntityType
 public class Entity
 {
     /// <summary>
-    /// The type of this entity, either a file or a folder. This will determine how the Path property should be interpreted and whether the Subentities property will contain any child entities.
+    /// Get or set the type of this entity, either a file or a folder. This will determine how the Path property should be interpreted and whether the Subentities property will contain any child entities.
     /// </summary>
     public EntityType EntityType { get; set; }
 
     /// <summary>
-    /// Full path to the file or folder represented by this entity. For example, "C:\MyFolder\Subfolder\File.txt" for a file or "C:\MyFolder\Subfolder" for a folder. This should be an absolute path that can be used to access the file or folder on the server's filesystem.
+    /// Get or set the full path to the file or folder represented by this entity. For example, "C:\MyFolder\Subfolder\File.txt" for a file or "C:\MyFolder\Subfolder" for a folder. This should be an absolute path that can be used to access the file or folder on the server's filesystem.
     /// </summary>
     public string Path { get; set; }
 
     /// <summary>
-    /// Get all files and subfolders contained within this entity. If this entity is a file, this will be an empty list.
+    /// Get or set all files and subfolders contained within this entity. If this entity is a file, this will be an empty list.
     /// </summary>
     public List<Entity> Subentities { get; set; }
 
