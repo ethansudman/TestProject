@@ -13,7 +13,35 @@ namespace TestProject.Controllers {
         }
 
         [HttpGet]
-        public Entity Get() {
+        [Route("file")]
+        public async Task<ActionResult> GetFile(string path)
+        {
+            #region Validation Logic
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return BadRequest("Path parameter is required.");
+            }
+
+            else if (!System.IO.File.Exists(path))
+            {
+                return NotFound("File not found.");
+            }
+
+            else if (!path.StartsWith(Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.BrowsableDirectoryName)))
+            {
+                return BadRequest("Access to the specified path is not allowed.");
+            }
+            #endregion
+
+            return new FileContentResult(System.IO.File.ReadAllBytes(path), "application/octet-stream")
+            {
+                FileDownloadName = Path.GetFileName(path)
+            };
+        }
+
+        [HttpGet]
+        [Route("directories")]
+        public Entity GetDirectories() {
             // Get one level up
             string directory = Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.BrowsableDirectoryName);
 
