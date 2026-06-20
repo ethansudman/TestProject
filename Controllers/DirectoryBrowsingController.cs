@@ -87,7 +87,7 @@ namespace TestProject.Controllers {
 
         [HttpGet]
         [Route("directories")]
-        public Entity GetDirectories() {
+        public Entity GetDirectories(string query = "") {
             Console.WriteLine("Getting directories...");
             // Get one level up
             string directory = Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.BrowsableDirectoryName);
@@ -99,6 +99,12 @@ namespace TestProject.Controllers {
             };
 
             InitEntity(entity);
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                // If a query is provided, filter the results to include only entities whose paths contain the query string (case-insensitive)
+                entity.Subentities = entity.Subentities.Where(e => e.Path.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
             return entity;
         }
