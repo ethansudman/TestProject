@@ -86,6 +86,7 @@ namespace TestProject.Controllers {
         [HttpGet]
         [Route("directories")]
         public Entity GetDirectories() {
+            Console.WriteLine("Getting directories...");
             // Get one level up
             string directory = Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.BrowsableDirectoryName);
 
