@@ -20,6 +20,7 @@ namespace TestProject.Controllers {
         [HttpPost("upload")]
         public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] string path)
         {
+            Console.WriteLine("Path: " + path);
             #region Validation
             // First couple of checks are for innocuous mistakes, last one is a potential security issue if we allow arbitrary file uploads to arbitrary locations on the server
             if (file == null || file.Length == 0)

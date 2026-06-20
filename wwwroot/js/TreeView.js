@@ -1,4 +1,4 @@
-﻿function load() {
+﻿function loadTreeView() {
     console.log("Loading data");
 
     // In the future, we probably want to use a more robust way to determine the URL of the server, but for now we'll just hardcode it.

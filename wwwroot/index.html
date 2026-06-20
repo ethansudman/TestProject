@@ -6,9 +6,17 @@
     <!-- CSS for TreeView (based on https://www.w3schools.com/howto/howto_js_treeview.asp) -->
     <link rel="stylesheet" href="css/TreeView.css" />
     <script type="text/javascript" src="js/TreeView.js"></script>
+    <script type="text/javascript" src="js/UploadFile.js"></script>
 </head>
-<body onload="load()">
-    Directory tree:<br/>
-    <ul id="directorytree"></ul>
+<body onload="loadTreeView()">
+    
+    Directory tree (click on file to download):<br />
+    <ul id="directorytree"></ul><br />
+    <br />
+    Upload file:<br />
+    Path on server: <input type="text" id="pathInput" placeholder="Enter path on server" />
+    <span id="validationText" style="color: red; display: none"></span><br />
+    <input type="file" id="fileInput" /><br />
+    <button onclick="uploadFile()">Upload</button>
 </body>
 </html>
