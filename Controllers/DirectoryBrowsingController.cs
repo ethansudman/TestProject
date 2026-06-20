@@ -70,6 +70,7 @@ namespace TestProject.Controllers {
             }
 
             // Must be a path within the BrowsableDirectory to prevent access to arbitrary files
+            // Henry Ford said that customers could pick any color they wanted for the Model T, as long as it was black - in this case, users can access any file they want, as long as it's within the BrowsableDirectory
             // In a real application, we might want to take further action beyond just returning a BadRequest, such as logging an alert or even temporarily blocking the client IP if we see repeated attempts to access unauthorized paths
             else if (!path.StartsWith(Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.BrowsableDirectoryName)))
             {
