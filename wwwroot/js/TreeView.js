@@ -93,10 +93,6 @@ function renderEntity(entity, parentUl) {
     }
 }
 
-function downloadFile(path) {
-
-}
-
 // Attach click handlers to caret elements to toggle nested lists
 function attachCaretHandlers() {
     const togglers = document.getElementsByClassName('caret');
