@@ -52,6 +52,7 @@ public class Entity
     {
         get
         {
+            // If it's a file, we just need to get the size of that one file. If it's a folder, we need to recursively sum the sizes of all contained files (including those in subfolders).
             return EntityType == EntityType.File ? new FileInfo(Path).Length : Subentities.Sum(e => e.Size);
         }
     }
