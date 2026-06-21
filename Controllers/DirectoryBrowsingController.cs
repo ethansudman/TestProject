@@ -102,11 +102,37 @@ namespace TestProject.Controllers {
 
             if (!string.IsNullOrWhiteSpace(query))
             {
-                // If a query is provided, filter the results to include only entities whose paths contain the query string (case-insensitive)
-                entity.Subentities = entity.Subentities.Where(e => e.Path.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
+                // If a query is provided, filter the results to include only entities whose paths contain the query string (case-insensitive).
+                // Apply recursive filtering so parent folders are preserved when any descendant matches.
+                filterEntity(entity, query);
             }
 
             return entity;
+        }
+
+        private bool filterEntity(Entity entity, string query)
+        {
+            // Recursively check to see if the entity or any of its subentities match the query, and if not, remove it from the results
+            if (entity == null) return false;
+            bool selfMatches = !string.IsNullOrWhiteSpace(entity.Path) &&
+                               entity.Path.Contains(query, StringComparison.OrdinalIgnoreCase);
+
+            if (entity.Subentities == null || entity.Subentities.Count == 0)
+            {
+                return selfMatches;
+            }
+
+            var kept = new List<Entity>();
+            foreach (var child in entity.Subentities)
+            {
+                if (filterEntity(child, query))
+                {
+                    kept.Add(child);
+                }
+            }
+
+            entity.Subentities = kept;
+            return selfMatches || entity.Subentities.Count > 0;
         }
 
         private void InitEntity(Entity entity)
