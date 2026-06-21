@@ -28,6 +28,8 @@ function filterTreeView() {
     const filterInput = document.getElementById('filterInput');
     setUrlFilter(filterInput.value);
 
+    // One flaw with this is that it will reload the entire tree view every time the filter changes, which could be inefficient for large trees.
+    // In the future, we may want to implement client - side filtering of the already loaded tree to provide a more responsive experience.
     loadTreeView();
 }
 
