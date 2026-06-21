@@ -1,8 +1,53 @@
-﻿function loadTreeView() {
+﻿function getUrlFilter() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('filter') || '';
+}
+
+function setUrlFilter(value) {
+    const params = new URLSearchParams(window.location.search);
+    if (value && value.trim() !== '') {
+        params.set('filter', value);
+    }
+    else {
+        params.delete('filter');
+    }
+    const newQuery = params.toString();
+    const newUrl = window.location.pathname + (newQuery ? `?${newQuery}` : '');
+    history.replaceState(null, '', newUrl);
+}
+
+function buildDirectoriesUrl(filter) {
+    const base = 'https://localhost:7146/DirectoryBrowsing/directories';
+
+    console.log('Building URL with filter:', filter);
+
+    return filter && filter.trim() !== '' ? `${base}?query=${encodeURIComponent(filter)}` : base;
+}
+
+function filterTreeView() {
+    const filterInput = document.getElementById('filterInput');
+    setUrlFilter(filterInput.value);
+
+    loadTreeView();
+}
+
+function loadTreeView() {
     console.log("Loading data");
 
+    const urlFilter = getUrlFilter();
+    const filterInput = document.getElementById('filterInput');
+    console.log('Filter value', filterInput.value)
+
+    if (filterInput && urlFilter) {
+        filterInput.value = urlFilter;
+    }
+
+    console.log('URL filter', urlFilter);
+
+    const fetchUrl = buildDirectoriesUrl(urlFilter);
+
     // In the future, we probably want to use a more robust way to determine the URL of the server, but for now we'll just hardcode it.
-    fetch('https://localhost:7146/DirectoryBrowsing/directories')
+    fetch(fetchUrl)
         .then(response => response.json())
         .then(json => {
             console.log('json', json);
