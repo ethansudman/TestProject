@@ -48,7 +48,8 @@ function loadTreeView() {
 
     const fetchUrl = buildDirectoriesUrl(urlFilter);
 
-    // In the future, we probably want to use a more robust way to determine the URL of the server, but for now we'll just hardcode it.
+    // For a production app, we would probably want to use a more robust way to determine the URL of the server, but for now we'll just hardcode it.
+    // Also, in an actual production app, we may want to consider adding a mechanism to authenticate requests to the server, especially if we add support for user-specific views or permissions.
     fetch(fetchUrl)
         .then(response => response.json())
         .then(json => {
