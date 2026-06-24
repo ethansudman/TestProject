@@ -17,6 +17,12 @@ namespace TestProject.Controllers {
             _logger = logger;
         }
 
+        /// <summary>
+        /// Endpoint to upload a file to a specified path within the BrowsableDirectory. The path must be a valid directory within the BrowsableDirectory, and the file will be saved with the same name as the uploaded file.
+        /// </summary>
+        /// <param name="file">The file that is being uploaded</param>
+        /// <param name="path">The full path that the <paramref name="file"/> should be uploaded to</param>
+        /// <returns>400 status code if <paramref name="file"/> is <c>null</c> or empty, or if <paramref name="path"/> is empty or is not an allowed path. 200 otherwise.</returns>
         [HttpPost("upload")]
         public async Task<IActionResult> UploadFile(IFormFile file, [FromForm] string path)
         {
@@ -54,6 +60,11 @@ namespace TestProject.Controllers {
             return Ok();
         }
 
+        /// <summary>
+        /// Download a file from the path
+        /// </summary>
+        /// <param name="path">Full path of the file to download</param>
+        /// <returns>400 status code and validation message if <paramref name="path"/> is empty, consists only of whitespace, or is not an allowable path</returns>
         [HttpGet]
         [Route("download")]
         public async Task<IActionResult> DownloadFile(string path)
@@ -85,11 +96,16 @@ namespace TestProject.Controllers {
             };
         }
 
+        /// <summary>
+        /// Get the entire directory structure starting from the BrowsableDirectory, optionally filtered by a query string. If a query is provided, only entities whose paths contain the query string (case-insensitive) will be included in the results, and parent folders will be preserved if any descendant matches.
+        /// </summary>
+        /// <param name="query">String to filter on</param>
+        /// <returns><see cref="Entity"/> populated with the entire directory structure</returns>
         [HttpGet]
         [Route("directories")]
         public Entity GetDirectories(string query = "") {
             Console.WriteLine("Getting directories...");
-            // Get one level up
+            // BrowsableDirectory will always be the root of the directory structure that we return, so we can just get the current working directory and append the BrowsableDirectory name to it to get the full path
             string directory = Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.BrowsableDirectoryName);
 
             var entity = new Entity
@@ -98,8 +114,10 @@ namespace TestProject.Controllers {
                 Path = directory
             };
 
+            // Recursively populate the entity and its subentities with the contents of the directory at the specified path
             InitEntity(entity);
 
+            // Apply the query if it's not empty or whitespace. This will filter the results to include only entities whose paths contain the query string (case-insensitive), and will preserve parent folders if any descendant matches.
             if (!string.IsNullOrWhiteSpace(query))
             {
                 // If a query is provided, filter the results to include only entities whose paths contain the query string (case-insensitive).
@@ -110,6 +128,12 @@ namespace TestProject.Controllers {
             return entity;
         }
 
+        /// <summary>
+        /// Implement the filtering logic for the GetDirectories endpoint. This method recursively checks if the entity or any of its subentities match the query string, and removes any entities that do not match from the results.
+        /// </summary>
+        /// <param name="entity">Root <see cref="Entity"/></param>
+        /// <param name="query">String that we're filtering on</param>
+        /// <returns><c>true</c> if there are any matches for the <paramref name="query"/>; <c>false</c> otherwise</returns>
         private bool filterEntity(Entity entity, string query)
         {
             // Recursively check to see if the entity or any of its subentities match the query, and if not, remove it from the results
@@ -135,6 +159,10 @@ namespace TestProject.Controllers {
             return selfMatches || entity.Subentities.Count > 0;
         }
 
+        /// <summary>
+        /// Recursively initializes the <see cref="Entity"/> and its subentities by populating the <see cref="Entity.Subentities"/> property with the contents of the directory at <see cref="Entity.Path"/>. If the entity is a folder, it will include both subfolders and files; if it's a file, it will initialize an empty list of subentities.
+        /// </summary>
+        /// <param name="entity">Root <see cref="Entity"/></param>
         private void InitEntity(Entity entity)
         {
             switch (entity.EntityType)
